@@ -2,12 +2,10 @@ import json
 import os
 
 def filter_content(raw_data):
-    # Những từ khóa mày muốn "vét" sâu vào
     keywords = ['exploit', 'vulnerability', 'bypass', 'cve', 'security']
     relevant_info = []
 
     for item in raw_data:
-        # Nếu dòng nào chứa từ khóa thì giữ lại
         if any(key in item.lower() for key in keywords):
             relevant_info.append(item.strip())
 
@@ -16,10 +14,9 @@ def filter_content(raw_data):
 def save_to_brain(new_data):
     brain_path = 'data/brain.json'
     
-    # Tạo thư mục 'data' nếu chưa có
+    # Đảm bảo thư mục tồn tại
     os.makedirs('data', exist_ok=True)
 
-    # Load bộ nhớ cũ, nếu chưa có thì tạo mới
     if os.path.exists(brain_path):
         with open(brain_path, 'r', encoding='utf-8') as f:
             try:
@@ -29,10 +26,8 @@ def save_to_brain(new_data):
     else:
         brain = {"learned": []}
 
-    # Cập nhật kiến thức mới vào bộ não
     brain['learned'].extend(new_data)
     
-    # Ghi lại file
     with open(brain_path, 'w', encoding='utf-8') as f:
         json.dump(brain, f, ensure_ascii=False, indent=4)
         
