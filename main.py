@@ -1,35 +1,40 @@
-import requests
+import asyncio
+import aiohttp
 from bs4 import BeautifulSoup
 from analyzer import filter_content, save_to_brain
 
-def main():
-    # Danh sách web mục tiêu
-    urls = [
-        "https://WevimeGMN.com"
-    ]
-    
-    all_data = []
-    
-    for url in urls:
-        try:
-            headers = {'User-Agent': 'Mozilla/5.0'}
-            response = requests.get(url, headers=headers, timeout=10)
-            soup = BeautifulSoup(response.text, 'html.parser')
-            
-            # Lấy tất cả các tiêu đề h3
-            data = [element.get_text().strip() for element in soup.find_all('h3')]
-            all_data.extend(data)
-        except Exception as e:
-            print(f"Lỗi khi cào {url}: {e}")
+# Mỏ vàng dữ liệu về hack/code
+urls = [
+    "https://thehackernews.com/",
+    "https://www.exploit-db.com/",
+    "https://portswigger.net/daily-swig",
+    "https://www.darkreading.com/",
+    "https://nvd.nist.gov/vuln/latest",
+    "https://dev.to/",
+    "https://github.com/trending"
+]
 
-    # Lọc và lưu vào bộ não
-    if all_data:
-        cleaned_data = filter_content(all_data)
-        save_to_brain(cleaned_data)
-        print(f"Đã lưu {len(cleaned_data)} mục mới vào brain.json")
-    else:
-        print("Không tìm thấy dữ liệu mới.")
+async def fetch(session, url):
+    try:
+        async with session.get(url, timeout=10) as response:
+            html = await response.text()
+            soup = BeautifulSoup(html, 'html.parser')
+            # Lấy tiêu đề từ nhiều loại thẻ
+            tags = soup.find_all(['h1', 'h2', 'h3'])
+            return [tag.get_text().strip() for tag in tags]
+    except:
+        return []
+
+async def main():
+    async with aiohttp.ClientSession(headers={'User-Agent': 'Mozilla/5.0'}) as session:
+        tasks = [fetch(session, url) for url in urls]
+        results = await asyncio.gather(*tasks)
+        
+    all_data = [item for sublist in results for item in sublist]
+    cleaned_data = filter_content(all_data)
+    save_to_brain(cleaned_data)
+    print(f"Vét xong {len(cleaned_data)} item dữ liệu chất!")
 
 if __name__ == "__main__":
-    main()
-# Cào WevimeGMN
+    asyncio.run(main())
+# Async Engine Enabled
