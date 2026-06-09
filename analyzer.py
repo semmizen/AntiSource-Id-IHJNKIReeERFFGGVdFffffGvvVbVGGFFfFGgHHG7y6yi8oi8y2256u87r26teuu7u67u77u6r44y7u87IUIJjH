@@ -15,7 +15,9 @@ def filter_content(raw_data):
 
 def save_to_brain(new_data):
     brain_path = 'data/brain.json'
-    
+        import os
+    os.makedirs('data', exist_ok=True)
+
     # Load bộ nhớ cũ, nếu chưa có thì tạo mới
     if os.path.exists(brain_path):
         with open(brain_path, 'r', encoding='utf-8') as f:
