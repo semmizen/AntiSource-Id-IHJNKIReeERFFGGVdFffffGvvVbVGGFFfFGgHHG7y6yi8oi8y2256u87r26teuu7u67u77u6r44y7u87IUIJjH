@@ -1,0 +1,29 @@
+name: AI-Auto-Evolution
+on:
+  schedule:
+    - cron: '*/5 * * * *' # Chạy mỗi 5 phút (đổi thành * * * * * nếu muốn nhanh hơn)
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Run AI Brain
+        run: python main.py
+
+      - name: Auto-Commit Updates
+        run: |
+          git config --global user.name 'AI-Bot-Evolution'
+          git config --global user.email 'bot@evolution.com'
+          git add .
+          git commit -m "System Evolution: Learned new patterns"
+          git push
+          
