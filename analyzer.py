@@ -14,7 +14,6 @@ def filter_content(raw_data):
 def save_to_brain(new_data):
     brain_path = 'data/brain.json'
     
-    # Đảm bảo thư mục tồn tại
     os.makedirs('data', exist_ok=True)
 
     if os.path.exists(brain_path):
