@@ -1,37 +1,26 @@
-import os
-import json
-import datetime
-import random
+import requests
+from bs4 import BeautifulSoup
+import analyzer  # Import file mày vừa tạo
 
-# Tạo cấu trúc thư mục nếu chưa có
-os.makedirs('data', exist_ok=True)
-os.makedirs('logs', exist_ok=True)
+def scrape_data(url):
+    try:
+        response = requests.get(url, timeout=10)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        return [p.text for p in soup.find_all('p')]
+    except:
+        return []
 
-def get_timestamp():
-    now = datetime.datetime.now()
-    return now.strftime("[%d/%m/%Y|%H:%M:%S]")
-
-def log_event(message):
-    timestamp = get_timestamp()
-    log_entry = f"{timestamp} {message}\n"
-    print(log_entry) # In ra console cho dễ theo dõi
-    with open('logs/evolution.log', 'a', encoding='utf-8') as f:
-        f.write(log_entry)
-
-def learn_and_evolve():
-    # Giả lập việc AI tự học kiến thức mới
-    knowledge_db = ["Exploit logic", "Web structure analysis", "Bypass pattern", "Data scraping"]
-    new_knowledge = random.choice(knowledge_db)
+def main():
+    target_url = "https://viblo.asia/tags/security"
+    raw_data = scrape_data(target_url)
     
-    # Ghi vào bộ nhớ
-    brain_file = 'data/brain.json'
-    data = {"last_learned": new_knowledge, "timestamp": str(datetime.datetime.now())}
-    with open(brain_file, 'w', encoding='utf-8') as f:
-        json.dump(data, f, indent=4)
-        
-    log_event(f"Already studied {new_knowledge}...")
-    log_event(f"I understand the code structure for {new_knowledge}...")
+    # Gọi thằng analyzer để xử lý
+    cleaned_data = analyzer.filter_content(raw_data)
+    analyzer.save_to_brain(cleaned_data)
+    
+    # Ghi log như bình thường
+    # ... (giữ nguyên phần ghi log của mày)
 
 if __name__ == "__main__":
-    learn_and_evolve()
-      
+    main()
+    
