@@ -1,2 +1,4 @@
-# AntiSource-Id-IHJNKIReeERFFGGVdFffffGvvVbVGGFFfFGgHHG7y6yi8oi8y2256u87r26teuu7u67u77u6r44y7u87IUIJjH
-AntiSource-Id-IHJNKIReeERFFGGVdFffffGvvVbVGGFFfFGgHHG7y6yi8oi8y2256u87r26teuu7u67u77u6r44y7u87IUIJjH
+# AI Script By Semmizen And ModZ 
+- It took 1 hour to create
+- The script was created on June 9, 2026
+  
